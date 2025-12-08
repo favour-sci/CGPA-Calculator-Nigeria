@@ -203,7 +203,7 @@
 
         <div class="card card-gauge-2">
             <div class="gauge-wrapper">
-                <div class="gauge-circle" style="border-top-color: var(--dark); border-right-color: var(--secondary);">
+                <div class="gauge-circle">
                     <div class="gauge-text">
                         <span class="gauge-value" id="dispCGPA">0.00</span>
                         <span class="gauge-label">Overall CGPA</span>
@@ -296,13 +296,15 @@
 </div>
 
 <script>
-    /* --- LOGIC SCRIPT --- */
+    /* --- LOGIC SCRIPT WITH AUTO-SAVE --- */
 
+    // Data State
     let currentScale = 5; 
     let chartBest = null;
     let chartDonut = null;
 
-    const initialData = [
+    // Default data for first-time users
+    const defaultData = [
         { code: "MAT 101", unit: 3, test: 28, exam: 45 },
         { code: "PHY 102", unit: 4, test: 30, exam: 50 },
         { code: "CHM 103", unit: 3, test: 20, exam: 35 },
@@ -310,6 +312,38 @@
         { code: "CSC 201", unit: 3, test: 25, exam: 55 }
     ];
 
+    let initialData = [];
+
+    // --- SAVE & LOAD SYSTEM ---
+    function loadData() {
+        const savedData = localStorage.getItem('gradeData');
+        const savedScale = localStorage.getItem('gradeScale');
+        const savedPrevCGPA = localStorage.getItem('prevCGPA');
+        const savedPrevUnits = localStorage.getItem('prevUnits');
+
+        if (savedData) {
+            initialData = JSON.parse(savedData);
+        } else {
+            initialData = JSON.parse(JSON.stringify(defaultData)); // Deep copy default
+        }
+
+        if (savedScale) {
+            currentScale = parseInt(savedScale);
+            document.getElementById('scaleSelect').value = currentScale;
+        }
+
+        if (savedPrevCGPA) document.getElementById('prevCGPA').value = savedPrevCGPA;
+        if (savedPrevUnits) document.getElementById('prevUnits').value = savedPrevUnits;
+    }
+
+    function saveData() {
+        localStorage.setItem('gradeData', JSON.stringify(initialData));
+        localStorage.setItem('gradeScale', currentScale);
+        localStorage.setItem('prevCGPA', document.getElementById('prevCGPA').value);
+        localStorage.setItem('prevUnits', document.getElementById('prevUnits').value);
+    }
+
+    // --- GRADING LOGIC ---
     function getGrade(score) {
         if (currentScale === 5) {
             if (score >= 70) return { g: 'A', p: 5 };
@@ -341,6 +375,7 @@
 
     function changeScale() {
         currentScale = parseInt(document.getElementById('scaleSelect').value);
+        saveData(); // Save change
         renderKey();
         calculateAll();
     }
@@ -371,12 +406,15 @@
 
     function addRow() {
         initialData.push({ code: "NEW 000", unit: 3, test: 0, exam: 0 });
+        saveData(); // Save new row
         renderTable();
     }
 
     function updateData(index, field, value) {
         if(field === 'code') initialData[index].code = value;
         else initialData[index][field] = Number(value);
+        
+        saveData(); // Save updates immediately
         calculateAll();
     }
 
@@ -407,6 +445,10 @@
         });
 
         const gpa = totalUnits ? (totalWGP / totalUnits).toFixed(2) : "0.00";
+        
+        // Save history inputs whenever calculated
+        saveData();
+
         const prevCGPA = parseFloat(document.getElementById('prevCGPA').value) || 0;
         const prevUnits = parseFloat(document.getElementById('prevUnits').value) || 0;
         const cumUnits = prevUnits + totalUnits;
@@ -426,12 +468,11 @@
             else if(val >= 3.50) honour = "Second Class Upper";
             else if(val >= 2.40) honour = "Second Class Lower";
             else if(val >= 1.50) honour = "Third Class";
-            else honour = "Pass";
+            else honour = "Pass / Fail";
         } else {
-            if(val >= 3.50) honour = "First Class Honours";
-            else if(val >= 3.00) honour = "Second Class Upper";
-            else if(val >= 2.50) honour = "Second Class Lower";
-            else if(val >= 1.50) honour = "Third Class";
+            if(val >= 3.50) honour = "Distinction";
+            else if(val >= 3.00) honour = "Upper Credit";
+            else if(val >= 2.50) honour = "Lower Credit";
             else honour = "Pass";
         }
         document.getElementById('classHonours').innerText = honour;
@@ -443,7 +484,6 @@
 
     // --- CHART INITIALIZATION ---
     function initCharts() {
-        // Register plugin for bar chart
         const ctx1 = document.getElementById('chartBest').getContext('2d');
         chartBest = new Chart(ctx1, {
             type: 'bar',
@@ -488,28 +528,31 @@
     function updateCharts(labels, scores, dist) {
         if (!chartBest || !chartDonut) return;
 
-        // Combine data
         let combined = labels.map((l, i) => ({l, s: scores[i]}));
         combined.sort((a,b) => b.s - a.s);
-        
-        // FILTER: Keep only Grade A (Score >= 70)
         let top = combined.filter(item => item.s >= 70);
 
-        // Update Bar Chart
         chartBest.data.labels = top.map(x => x.l);
         chartBest.data.datasets[0].data = top.map(x => x.s);
         chartBest.update();
 
-        // Update Donut Chart
         chartDonut.data.datasets[0].data = [dist.A, dist.B, dist.C, dist.D, dist.E, dist.F];
         chartDonut.update();
     }
 
     function openNav() { document.getElementById("mySidebar").style.width = "300px"; }
     function closeNav() { document.getElementById("mySidebar").style.width = "0"; }
-    function resetDefaults() { location.reload(); }
+    
+    // Updated Reset: Clear storage and reload
+    function resetDefaults() { 
+        if(confirm("Are you sure? This will clear all your saved data.")) {
+            localStorage.clear();
+            location.reload(); 
+        }
+    }
 
     window.onload = function() {
+        loadData(); // Load saved data first
         renderKey();
         initCharts();
         renderTable();
