@@ -9,7 +9,7 @@ Because it runs entirely in the browser using **Local Storage**, student data re
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-## **Access the Live Webpage** (https://favour-sci.github.io/CGPA-Planner/)
+## **Access the Live Webpage** (https://favour-sci.github.io/CGPA-Calculator-Nigeria/)
 
 ## How to Use
 
