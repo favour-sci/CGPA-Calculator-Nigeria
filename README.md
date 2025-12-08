@@ -11,6 +11,14 @@ Because it runs entirely in the browser using **Local Storage**, student data re
 
 ## **Access the Live Webpage** (https://favour-sci.github.io/CGPA-Planner/)
 
+## How to Use
+
+1.  **Select Your Scale:** Use the dropdown in the header to choose between a 5.0 or 4.0 grading system.
+2.  **Input History (Optional):** If you are a returning student, enter your **Previous CGPA** and **Previous Total Units** in the summary panel.
+3.  **Add Courses:** Click "Add Course" to create rows for your current semester.
+4.  **Enter Scores:** Type your Course Code, Units, Test Scores, and Exam Scores. The system auto-calculates the Total, Grade, and Points.
+5.  **Analyze:** Watch the dashboard at the top update instantly to reflect your projected GPA and Class of Degree (e.g., First Class, Second Class Upper).
+
 ## Key Features
 
 * **Interactive Dashboard:** Real-time visual feedback using Gauges for GPA/CGPA, Bar Charts for top courses, and Donut Charts for grade distribution.
@@ -27,19 +35,6 @@ Because it runs entirely in the browser using **Local Storage**, student data re
 * **Visualization:** [Chart.js](https://www.chartjs.org/)
 * **Plugins:** [chartjs-plugin-datalabels](https://chartjs-plugin-datalabels.netlify.app/) (for data values on charts)
 * **Icons:** [FontAwesome 6](https://fontawesome.com/)
-
-## How to Use
-
-1.  **Select Your Scale:** Use the dropdown in the header to choose between a 5.0 or 4.0 grading system.
-2.  **Input History (Optional):** If you are a returning student, enter your **Previous CGPA** and **Previous Total Units** in the summary panel.
-3.  **Add Courses:** Click "Add Course" to create rows for your current semester.
-4.  **Enter Scores:** Type your Course Code, Units, Test Scores, and Exam Scores. The system auto-calculates the Total, Grade, and Points.
-5.  **Analyze:** Watch the dashboard at the top update instantly to reflect your projected GPA and Class of Degree (e.g., First Class, Second Class Upper).
-
-## Installation & Setup
-
-Since this is a client-side application, you do not need to install Node.js or set up a database.
-
 
 ## Contributing
 
