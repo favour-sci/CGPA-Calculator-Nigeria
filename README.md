@@ -50,13 +50,5 @@ Contributions are welcome! If you have suggestions for improvements (like adding
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Author
-
-**Favour Modupeoluwa James**
-* **Role:** Data Analyst & Research Consultant
-* **Institution:** University of Ibadan
-* **Portfolio:** [View Portfolio](https://favour-sci.github.io/Portfolio-Website/)
-* **LinkedIn:** [Connect on LinkedIn](https://www.linkedin.com/in/james-favour/)
-
 ---
 *Predict. Plan. Achieve.*
